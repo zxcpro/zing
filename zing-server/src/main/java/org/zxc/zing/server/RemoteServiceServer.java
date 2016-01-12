@@ -28,28 +28,29 @@ public class RemoteServiceServer {
 
     private static ConcurrentHashMap<String, Object> serviceImplMap = new ConcurrentHashMap<String, Object>();
 
-    public static void addService(String serviceName, Object serviceImpl) {
-        log.info("add service:"+serviceName+" impl "+serviceImpl);
-        startup();
-        log.info("map before add:"+serviceImplMap);
-        serviceImplMap.putIfAbsent(serviceName, serviceImpl);
-        log.info("map after add:"+serviceImplMap);
-
+    static {
+        bootstrap();
     }
 
-    public static void startup() {
+    public static void addService(String serviceName, Object serviceImpl) {
+        log.info("add service:"+serviceName+" impl "+serviceImpl);
+        serviceImplMap.putIfAbsent(serviceName, serviceImpl);
+        log.info("add service:"+serviceName+" impl "+serviceImpl +" done");
+    }
+
+    public static void bootstrap() {
         log.info("try start cur state:"+started);
         if (!started) {
             synchronized (RemoteServiceServer.class) {
                 if (!started) {
-                    doStartup();
+                    doStart();
                 }
             }
         }
         log.info("started");
     }
 
-    private static void doStartup() {
+    private static void doStart() {
 
         log.info("do start server");
 
@@ -84,6 +85,10 @@ public class RemoteServiceServer {
     }
 
     public static Object getActualServiceImpl(String serviceName) {
+        if (!started) {
+            log.warn("server not started");
+            bootstrap();
+        }
         log.info("cur map when get:"+serviceImplMap);
         return serviceImplMap.get(serviceName);
     }

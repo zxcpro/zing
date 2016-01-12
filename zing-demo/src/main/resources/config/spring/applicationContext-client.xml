@@ -4,7 +4,7 @@
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <bean id="echoService" class="org.zxc.zing.client.proxy.ServiceProxyBeanFactory" factory-method="getService">
+    <bean id="demoService" class="org.zxc.zing.client.proxy.ServiceProxyBeanFactory" factory-method="getService">
         <constructor-arg value="org.zxc.zing.demo.api.DemoService" />
     </bean>
 </beans>

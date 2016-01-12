@@ -11,9 +11,9 @@ import java.util.concurrent.CountDownLatch;
  * Created by xuanchen.zhao on 15-12-16.
  */
 
-public class EchoServerTest {
+public class DemoServerTest {
 
-    private static final Logger log = LoggerFactory.getLogger(EchoServerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(DemoServerTest.class);
 
     public static void main(String[] args) throws InterruptedException {
         log.info("echoserver start");

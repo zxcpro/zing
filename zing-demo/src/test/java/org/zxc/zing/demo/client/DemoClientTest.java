@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath*:config/spring/applicationContext-client.xml"} )
-public class EchoClientTest{
+public class DemoClientTest {
 
     @Autowired
     private DemoService demoService;
@@ -36,7 +36,7 @@ public class EchoClientTest{
 
     @Test
     public void testBatchInvocation() throws InterruptedException {
-        final int THREAD_COUNT = 300;
+        final int THREAD_COUNT = 50;
         CountDownLatch latch = new CountDownLatch(THREAD_COUNT);
         ExecutorService threadPool = Executors.newFixedThreadPool(10);
         for (int i = 0; i < THREAD_COUNT; i++) {
