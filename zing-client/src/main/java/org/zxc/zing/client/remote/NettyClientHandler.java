@@ -22,7 +22,6 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<RemoteRespon
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RemoteResponse msg) throws Exception {
-        log.info("current handler:"+ super.toString()+" client receive response from server:"+msg);
         future.set(msg);
     }
 }

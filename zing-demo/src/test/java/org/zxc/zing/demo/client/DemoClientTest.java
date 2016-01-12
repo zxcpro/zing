@@ -29,7 +29,7 @@ public class DemoClientTest {
     }
 
     @Test
-    public void testLoadUser(){
+    public void testLoadMessageObject(){
         MessageDTO messageDTO = demoService.loadObject(1);
         System.out.println(messageDTO);
     }

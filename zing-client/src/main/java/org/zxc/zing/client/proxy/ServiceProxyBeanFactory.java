@@ -13,7 +13,6 @@ public class ServiceProxyBeanFactory {
 
 
     public static Object getService(String serviceName) throws ClassNotFoundException {
-        log.info("creating service proxy bean by spring");
         Class<?> serviceClass = Class.forName(serviceName);
         return Reflection.newProxy(serviceClass, new ServiceProxy(serviceName));
     }

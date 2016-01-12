@@ -50,7 +50,6 @@ public class RemoteClient {
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            // 添加decoder和业务handler
                             ch.pipeline().addLast(new NettyDecoder(), new NettyEncoder(), new NettyClientHandler(future));
                         }
                     });

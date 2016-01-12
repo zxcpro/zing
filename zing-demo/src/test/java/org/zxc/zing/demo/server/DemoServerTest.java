@@ -16,7 +16,7 @@ public class DemoServerTest {
     private static final Logger log = LoggerFactory.getLogger(DemoServerTest.class);
 
     public static void main(String[] args) throws InterruptedException {
-        log.info("echoserver start");
+        log.info("demoServer start");
         new ClassPathXmlApplicationContext("classpath*:config/spring/applicationContext-server.xml");
         CountDownLatch latch = new CountDownLatch(1);
         latch.await();

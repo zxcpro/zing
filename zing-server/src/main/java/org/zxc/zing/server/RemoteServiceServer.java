@@ -33,13 +33,11 @@ public class RemoteServiceServer {
     }
 
     public static void addService(String serviceName, Object serviceImpl) {
-        log.info("add service:"+serviceName+" impl "+serviceImpl);
         serviceImplMap.putIfAbsent(serviceName, serviceImpl);
-        log.info("add service:"+serviceName+" impl "+serviceImpl +" done");
     }
 
     public static void bootstrap() {
-        log.info("try start cur state:"+started);
+        log.info("try bootstrap state:"+started);
         if (!started) {
             synchronized (RemoteServiceServer.class) {
                 if (!started) {
@@ -89,7 +87,6 @@ public class RemoteServiceServer {
             log.warn("server not started");
             bootstrap();
         }
-        log.info("cur map when get:"+serviceImplMap);
         return serviceImplMap.get(serviceName);
     }
 

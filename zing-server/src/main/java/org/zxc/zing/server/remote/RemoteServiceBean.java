@@ -15,7 +15,6 @@ public class RemoteServiceBean {
     private Object serviceImpl;
 
     public void init() {
-        log.info("spring add serviceBean init");
         RemoteServiceServer.addService(serviceName, serviceImpl);
     }
 

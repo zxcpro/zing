@@ -37,7 +37,7 @@ public class NettyDecoder extends ByteToMessageDecoder{
             in.resetReaderIndex();
         }
 
-        log.info("try decode do Decode");
+        log.info("try decode doDecode");
 
         byte[] data = new byte[dataLength];
         in.readBytes(data);

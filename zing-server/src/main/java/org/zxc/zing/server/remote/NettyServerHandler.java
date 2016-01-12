@@ -23,11 +23,8 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RemoteReques
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RemoteRequest request) throws Exception {
 
-        log.info("current handler:"+super.toString()+" server received request:"+request);
 
         Object actualServiceImpl = RemoteServiceServer.getActualServiceImpl(request.getServiceName());
-
-        log.info("server get serviceImpl from map:"+actualServiceImpl+" hashCode:"+((Object)actualServiceImpl).toString());
 
         if (actualServiceImpl != null) {
             RemoteResponse response = new RemoteResponse();

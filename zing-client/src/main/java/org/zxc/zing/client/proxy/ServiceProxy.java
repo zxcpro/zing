@@ -27,7 +27,6 @@ public class ServiceProxy extends AbstractInvocationHandler{
 
     @Override
     protected Object handleInvocation(Object proxy, Method method, Object[] args) throws Throwable {
-        log.info("proxy method invocation!");
 
         ProviderInfo provider = ServiceProviderManager.getProvider(serviceName);
 
@@ -38,7 +37,6 @@ public class ServiceProxy extends AbstractInvocationHandler{
         request.setParameterTypes(method.getParameterTypes());
         request.setArguments(args);
 
-        //todo netty client是一个客户端和一个服务端的连接，应该是一次建立，之后到该服务器的连接可以复用
         RemoteClient client = new RemoteClient(provider);
         RemoteResponse response = client.send(request);
 
