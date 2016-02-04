@@ -1,19 +1,12 @@
 package org.zxc.zing.server;
 
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.zxc.zing.common.handler.NettyDecoder;
-import org.zxc.zing.common.handler.NettyEncoder;
-import org.zxc.zing.server.remote.NettyServerHandler;
+import org.zxc.zing.common.config.ConfigManager;
+import org.zxc.zing.common.constant.Constants;
+import org.zxc.zing.common.registry.RegistryManager;
+import org.zxc.zing.server.remote.NettyServer;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,17 +19,30 @@ public class RemoteServiceServer {
 
     private static volatile boolean started = false;
 
+    private static String ipAddress = ConfigManager.getInstance().getProperty(Constants.SERVER_IP_ADDRESS_CONFIG_KEY);
+
+    private static int port = Strings.isNullOrEmpty(ConfigManager.getInstance().getProperty(Constants.SERVER_PORT_CONFIG_KEY)) ?
+                                Constants.SERVER_DEFAULT_PORT :
+                                    Integer.valueOf(ConfigManager.getInstance().getProperty(Constants.SERVER_PORT_CONFIG_KEY));
+
+
     private static ConcurrentHashMap<String, Object> serviceImplMap = new ConcurrentHashMap<String, Object>();
 
     static {
-        bootstrap();
+        try {
+            bootstrap();
+        } catch (Exception e) {
+            log.error("Server start error:"+e.getMessage(), e);
+            System.exit(1);
+        }
     }
 
     public static void addService(String serviceName, Object serviceImpl) {
         serviceImplMap.putIfAbsent(serviceName, serviceImpl);
+        RegistryManager.publishService(serviceName, ipAddress, port);
     }
 
-    public static void bootstrap() {
+    public static void bootstrap() throws Exception {
         log.info("try bootstrap state:"+started);
         if (!started) {
             synchronized (RemoteServiceServer.class) {
@@ -48,45 +54,13 @@ public class RemoteServiceServer {
         log.info("started");
     }
 
-    private static void doStart() {
-
+    private static void doStart() throws Exception {
         log.info("do start server");
-
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
-
-        ServerBootstrap bootstrap = new ServerBootstrap();
-        bootstrap.group(bossGroup, workerGroup)
-                .channel(NioServerSocketChannel.class)
-                .childHandler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new NettyDecoder(), new NettyEncoder(), new NettyServerHandler());
-                    }
-                }).option(ChannelOption.SO_BACKLOG, 128)
-                .childOption(ChannelOption.SO_KEEPALIVE, true);
-
-        try {
-            ChannelFuture f = bootstrap.bind(8080).sync();
-            f.addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture future) throws Exception {
-                    if (future.isSuccess()) {
-                        started = true;
-                        log.info("server started!");
-                    }
-                }
-            });
-        } catch (InterruptedException e) {
-            log.error("server started failed:"+e.getMessage(), e);
-        }
+        NettyServer.start(port);
+        RegistryManager.start();
     }
 
     public static Object getActualServiceImpl(String serviceName) {
-        if (!started) {
-            log.warn("server not started");
-            bootstrap();
-        }
         return serviceImplMap.get(serviceName);
     }
 

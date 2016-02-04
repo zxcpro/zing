@@ -3,7 +3,7 @@ package org.zxc.zing.client.proxy;
 import com.google.common.reflect.AbstractInvocationHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.zxc.zing.client.provider.ProviderInfo;
+import org.zxc.zing.common.entity.ProviderInfo;
 import org.zxc.zing.client.provider.ServiceProviderManager;
 import org.zxc.zing.client.remote.RemoteClient;
 import org.zxc.zing.common.entity.RemoteRequest;

@@ -1,4 +1,4 @@
-package org.zxc.zing.demo.server;
+package org.zxc.zing.demo.test.server;
 
 
 import org.slf4j.Logger;

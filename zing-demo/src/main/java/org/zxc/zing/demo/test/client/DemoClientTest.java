@@ -1,10 +1,6 @@
-package org.zxc.zing.demo.client;
+package org.zxc.zing.demo.test.client;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.zxc.zing.demo.api.DemoService;
 import org.zxc.zing.demo.api.MessageDTO;
 
@@ -15,27 +11,29 @@ import java.util.concurrent.Executors;
 /**
  * Created by xuanchen.zhao on 15-12-11.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:config/spring/applicationContext-client.xml"} )
 public class DemoClientTest {
 
-    @Autowired
-    private DemoService demoService;
+    private static DemoService demoService;
 
-    @Test
-    public void test(){
+    public static void main(String[] args) throws InterruptedException {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath*:config/spring/applicationContext-client.xml");
+        demoService = (DemoService) context.getBean("demoService");
+        test();
+        testLoadMessageObject();
+        testBatchInvocation();
+    }
+
+    public static void test() throws InterruptedException {
         String result = demoService.echo("Hello World!");
         System.out.println(result);
     }
 
-    @Test
-    public void testLoadMessageObject(){
+    public static void testLoadMessageObject(){
         MessageDTO messageDTO = demoService.loadObject(1);
         System.out.println(messageDTO);
     }
 
-    @Test
-    public void testBatchInvocation() throws InterruptedException {
+    public static void testBatchInvocation() throws InterruptedException {
         final int THREAD_COUNT = 50;
         CountDownLatch latch = new CountDownLatch(THREAD_COUNT);
         ExecutorService threadPool = Executors.newFixedThreadPool(10);
@@ -58,7 +56,7 @@ public class DemoClientTest {
 
         @Override
         public void run() {
-            String result = demoService.echo("Hello World!");
+            String result = demoService.echo("Hello!");
             System.out.println(result);
             latch.countDown();
         }

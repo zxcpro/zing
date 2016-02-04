@@ -12,7 +12,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.zxc.zing.client.provider.ProviderInfo;
+import org.zxc.zing.common.entity.ProviderInfo;
 import org.zxc.zing.common.entity.RemoteRequest;
 import org.zxc.zing.common.entity.RemoteResponse;
 import org.zxc.zing.common.handler.NettyDecoder;
